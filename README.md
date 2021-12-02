@@ -25,8 +25,8 @@
 - sudo listuser
 
 # Normal User Commands
-- <user> listfile all
-- <user> upfile upload.txt
-- <user> downfile upload.txt
+- {user} listfile all
+- {user} upfile upload.txt
+- {user} downfile upload.txt
 
 
