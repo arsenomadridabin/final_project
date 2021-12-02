@@ -8,6 +8,10 @@
 - Compile SuperUser program : gcc -o superUser superUser.c
 - Compile NormalUser program : gcc -o normalUser normalUser.c
 
+- Run server program using ./server
+- Run client program superuser using ./superUser
+- Run client program normaluser using ./normalUser
+
 # Super User commands
 - sudo crate
 - sudo -cretae lion
