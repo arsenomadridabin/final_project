@@ -111,6 +111,7 @@ int main(){
   struct sockaddr_in serverAddr;
   char buffer[1024];
 
+  /*
   char username[100];
   char password[100];
   int k,l;
@@ -145,6 +146,7 @@ int main(){
     printf("Incorrect Username/Password\n");
     return 1;
   }
+  */
 
   //Creating Socket
   clientSocket = socket(AF_INET, SOCK_STREAM,0);
