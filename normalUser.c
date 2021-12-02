@@ -14,14 +14,15 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 2222
+#define PORT 8000
 #define SIZE 1024
 
 #define basepath "/classes/cs7103/cs710309/abin/users/"
 
+
+// #define basepath "/Users/"
+
 #define user_credential "user_credentials.txt"
-
-
 /*
 *
 *  This function concatenate two strings
@@ -35,7 +36,7 @@ char* concat(const char *s1, const char *s2)
     return result;
 }
 
-// Download File funciton for GeneralUser
+// Download File funciton for NormalUser
 void download_file(int sockfd){
   int n;
   FILE *fp;
@@ -59,7 +60,7 @@ void download_file(int sockfd){
   return;
 }
 
-//upload file function for GeneralUser
+//upload file function for Normal User
 void upload_file(FILE *fp, int sockfd){
 
   int n;
@@ -73,10 +74,10 @@ void upload_file(FILE *fp, int sockfd){
   }
 }
 
-//Open file function for GeneralUser
+//Open file function for Normal User
 void send_file(int sockfd, char *file_name){
   FILE *fp;
-  printf("filename=%s\n",file_name);
+  // printf("filename=%s\n",file_name);
    fp = fopen(file_name, "r");
     if (fp == NULL) {
 
@@ -228,7 +229,6 @@ int main(){
     if (strlen(buffer)==0){
         continue;
       }
-    
     char data[100];
 
     strcpy(data,buffer);
@@ -241,7 +241,6 @@ int main(){
     //To split command by space delimiter
      while (p != NULL)
      {
-        printf("%s\n",p);
         cmd[i++] = p;
         p = strtok (NULL, " ");
      }
@@ -249,7 +248,7 @@ int main(){
      char *file_name = cmd[i-1];
 
      /*end upload file filename*/
-  
+    printf("sending request to server .... -> %s\n",buffer);
     send(clientSocket, buffer, strlen(buffer),0);
 
     if(strncmp(buffer, "exit",4)==0){

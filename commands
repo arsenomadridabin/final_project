@@ -1,0 +1,16 @@
+#Admin users
+sudo crate
+sudo -cretae lion
+sudo -create tiger
+sudo -delete lion
+touch random.txt
+sudo del random.txt
+sudo fileown tiger.txt
+sudo luf all
+sudo luf tiger
+sudo listuser
+
+#Noramal user
+abin listfile all
+abin upfile upload.txt
+abin downfile upload.txt

@@ -16,8 +16,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 2222
+#define PORT 8000
 #define SIZE 1024
+
+#define user_credential "admin_credentials.txt"
 
 // Download File function for Adminuser
 void download_file(int sockfd){
@@ -55,11 +57,94 @@ void upload_file(FILE *fp, int sockfd){
   }
 }
 
+int verify_username_and_password(char *username, char*password){
+  FILE *fp;
+  int size = 1024, pos;
+  int c;
+  char *buffer = (char *)malloc(size);
+  char *password_2;
+  int username_exist = 0;
+  int password_match = 0;
+
+
+  fp = fopen(user_credential,"r");
+  if (fp == NULL){
+    printf("[-] Error opening authentication file\n");
+    return 0;
+  }
+  else{
+    do { // read all lines in file
+        pos = 0;
+        do{ // read one line
+          c = fgetc(fp);
+          if(c != EOF) buffer[pos++] = (char)c;
+          if(pos >= size - 1) { // increase buffer length - leave room for 0
+            size *=2;
+            buffer = (char*)realloc(buffer, size);
+          }
+        }while(c != EOF && c != '\n');
+        buffer[pos] = 0;
+        if (username_exist == 1){
+          buffer[strlen(buffer)] = '\0'; 
+          password_2 = buffer;
+          if (strcmp(password,password_2)==0){
+            password_match = 1;
+            return 1;
+          }
+          else{
+            return 0;
+          }
+        }
+        buffer[strlen(buffer)-1] = '\0';
+        if (strcmp(buffer,username)==0){
+          username_exist = 1;
+        }
+      } while(c != EOF); 
+      fclose(fp);
+    return 0;
+  }
+}
+
 //Main function to establish the network connection of Adminuser with the server
 int main(){
   int clientSocket, ret;
   struct sockaddr_in serverAddr;
   char buffer[1024];
+
+  char username[100];
+  char password[100];
+  int k,l;
+  char input_1='\0';
+  char input_2 = '\0';
+
+  int verify;
+
+  printf("Username:");
+  while (input_1 !='\n'){
+    input_1 = getchar();
+
+    if(input_1 !='\n'){
+      username[k] = input_1;
+    }
+    k++;
+  }
+  printf("Password:");
+  while (input_2 !='\n'){
+    input_2 = getchar();
+
+    if(input_2 !='\n'){
+      password[l] = input_2;
+    }
+    l++;
+  }
+  verify = verify_username_and_password(username,password);
+  if (verify == 1){
+    printf("[+]Logged in Successfully\n");
+  }
+  else{
+    printf("Incorrect Username/Password\n");
+    return 1;
+  }
 
   //Creating Socket
   clientSocket = socket(AF_INET, SOCK_STREAM,0);
@@ -93,7 +178,7 @@ int main(){
     input='\0';
     n =0;
 
-    printf("AdminUser: \t");
+    printf("user@admin: \t");
  
     
     while (input !='\n'){
