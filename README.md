@@ -13,20 +13,19 @@
 - Run client program normaluser using ./normalUser
 
 # Super User commands
-- sudo crate
-- sudo -cretae lion
-- sudo -create tiger
-- sudo -delete lion
-- touch random.txt
-- sudo del random.txt
-- sudo fileown tiger.txt
-- sudo luf all
-- sudo luf tiger
-- sudo listuser
+- sudo -create lion (Create User lion)
+- sudo -create tiger (Creates User Tiger)
+- sudo -delete lion (Delete user lion)
+- touch random.txt (Create a sample text file form shell)
+- sudo del random.txt (Deletes a file named random.txt)
+- sudo fileown tiger.txt (Return owner of the file tiger.txt)
+- sudo luf all (Returns all the available files from all user)
+- sudo luf tiger (Return files owned by tiger)
+- sudo listuser (Returns all availble users)
 
 # Normal User Commands
-- {user} listfile all
-- {user} upfile upload.txt
-- {user} downfile upload.txt
+- {user} listfile all (Returns all files)
+- {user} upfile upload.txt (Uploads a file named upload.txt)
+- {user} downfile upload.txt (Downloads a file named download.txt)
 
 
