@@ -107,7 +107,7 @@ int verify_username_and_password(char *username, char*password){
 
 char* get_username(void){
   static char username[100];
-  int k,l;
+  int k=0;
   char input_1='\0';
 
   printf("Username:");
@@ -123,44 +123,36 @@ char* get_username(void){
   return username;
 }
 
+char* get_password(void){
+  static char pw[100];
+  int j=0;
+  char input_1='\0';
+
+  printf("Password:");
+  while (input_1 !='\n'){
+    input_1 = getchar();
+    printf("%c",input_1);
+
+    if(input_1 !='\n'){
+      pw[j] = input_1;
+    }
+    j++;
+  }
+  printf("inner=%s",pw);
+  return pw;
+}
+
 
 //Main function to establish the network connection of Adminuser with the server
 int main(){
   int clientSocket, ret;
   struct sockaddr_in serverAddr;
   char buffer[1024];
-
-  char *username = "\0";
-  char *val = get_username();
-  printf("%s\n",val );
-
-  /*
-  char username[100];
-  char password[100];
-  int k,l;
-  char input_1='\0';
-  char input_2 = '\0';
-
   int verify;
 
-  printf("Username:");
-  while (input_1 !='\n'){
-    input_1 = getchar();
-
-    if(input_1 !='\n'){
-      username[k] = input_1;
-    }
-    k++;
-  }
-  printf("Password:");
-  while (input_2 !='\n'){
-    input_2 = getchar();
-
-    if(input_2 !='\n'){
-      password[l] = input_2;
-    }
-    l++;
-  }
+  char *username = get_username();
+  char *password = get_password();
+  
   verify = verify_username_and_password(username,password);
   if (verify == 1){
     printf("[+]Logged in Successfully\n");
@@ -169,7 +161,6 @@ int main(){
     printf("Incorrect Username/Password\n");
     return 1;
   }
-  */
 
   //Creating Socket
   clientSocket = socket(AF_INET, SOCK_STREAM,0);
