@@ -16,12 +16,10 @@
 // #define basepath "/Users/"
 
 #define user_credential "user_credentials.txt"
-
 int main(){
   int clientSocket, ret;
   struct sockaddr_in serverAddr;
   char buffer[1024];
-
 
   char username[100];
   char password[100];
@@ -49,6 +47,5 @@ int main(){
     }
     l++;
   }
-  printf("\n username=%s and password=%s",username,password);
-  
-}
+  printf("\nusername = %s and password=%s",username,password);
+ }
