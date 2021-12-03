@@ -198,7 +198,7 @@ int main(){
   //Specify an address for the socket
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(PORT);
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.01");
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
   //Connecting to server
   ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
@@ -208,79 +208,56 @@ int main(){
   }
   printf("[+]Successfully connected to Server.\n");
   int n;
-  
   char input;
-  char temp_buffer[100];
   while(1){
-    
 
-    printf("%s@user : \t",username);
-    n =0;
+//reset values and buffers
+    bzero(buffer, sizeof(buffer)); 
     input='\0';
-    //clear buffer
-    memset(buffer,'\0',100);
+    n =0;
+
+    printf("user@admin: \t");
+ 
+    
     while (input !='\n'){
       input = getchar();
-
       if(input !='\n'){
         buffer[n] = input;
       }
       n++;
     }
-    if (strlen(buffer)==0){
-        continue;
-      }
-    char data[100];
 
-    strcpy(data,buffer);
-    
-    /*For upload file extract filename*/
-    char *cmd[5];
-    //parser in client to check filename
-    char *p = strtok (data, " ");
-    int i=0;
-    //To split command by space delimiter
-     while (p != NULL)
-     {
-        cmd[i++] = p;
-        p = strtok (NULL, " ");
-     }
-
-     char *file_name = cmd[i-1];
-
-     /*end upload file filename*/
-    printf("sending request to server .... -> %s\n",buffer);
+     if (strlen(buffer)==0){
+      continue;
+    }
+   
+   
     send(clientSocket, buffer, strlen(buffer),0);
 
     if(strncmp(buffer, "exit",4)==0){
           close(clientSocket);
-          printf("[-] Normal User disconnected from Server.\n");
+          printf("[-] Admin User Exit !! Disconnected from Server.\n");
           exit(1);
     }
     
-    bzero(buffer, sizeof(buffer)); 
-    if(recv(clientSocket, buffer, 1024,0)<0){
-      printf("[-]Error on Receiving the Data from Server");
-    }
-    else if (strncmp(buffer, "exit",4) == 0) {
-      printf("Server exited");
+      while(1){
+          bzero(buffer, sizeof(buffer)); 
+          if(recv(clientSocket, buffer, 1024,0)<0){
+            printf("[-]Error on Receiving the Data from Server");
+          }
+          else if (strncmp(buffer, "exit",4) == 0) {
+            printf("Server exited");
 
-      exit(1);
-    }else if(strcmp(buffer, "Start uploading") == 0 ){
-      printf("uploading");
-      send_file(clientSocket,file_name);
-     
-    }else if(strcmp(buffer, "Start downloading") == 0 ){
-      printf("downloading file");
-      download_file(clientSocket);
-
-    }else{
-      printf("From Server: \t %s\n", buffer);
-    }
+            exit(1);
+          }else{
+            printf("\nFrom Server:----- \t %s\n", buffer);
+          
+            break;
+          }
+      }
         printf("\n-------------------------------\n"); 
-      
+  
   }
   return 0;
 }
-
-//End of GeneralUser c file. 
+//End of Adminuser c file. 
