@@ -131,8 +131,7 @@ int main(){
   char buffer[1024];
 
   char *username = "\0";
-  char *val;
-  val = get_username();
+  const char *val = get_username();
   printf("%s\n",val );
 
   /*
