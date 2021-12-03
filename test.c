@@ -131,14 +131,12 @@ char* get_password(void){
   printf("Password:");
   while (input_1 !='\n'){
     input_1 = getchar();
-    printf("%c",input_1);
 
     if(input_1 !='\n'){
       pw[j] = input_1;
     }
     j++;
   }
-  printf("inner=%s",pw);
   return pw;
 }
 
