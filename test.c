@@ -4,7 +4,9 @@
 // Class: cs7103-au21
 // LogonID: cs710309
 
-//importing all the necessary libraries for generalUser
+
+//importing all the necessary libraries for AdminUser
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,26 +19,9 @@
 #define PORT 8000
 #define SIZE 1024
 
-#define basepath "/classes/cs7103/cs710309/abin/users/"
+#define user_credential "admin_credentials.txt"
 
-
-// #define basepath "/Users/"
-
-#define user_credential "user_credentials.txt"
-/*
-*
-*  This function concatenate two strings
-*/
-char* concat(const char *s1, const char *s2)
-{
-    char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
-    
-    strcpy(result, s1);
-    strcat(result, s2);
-    return result;
-}
-
-// Download File funciton for NormalUser
+// Download File function for Adminuser
 void download_file(int sockfd){
   int n;
   FILE *fp;
@@ -47,8 +32,6 @@ void download_file(int sockfd){
   while (1) {
     n = recv(sockfd, buffer, SIZE, 0);
      printf("%s", buffer); 
-     
-
     if (n <= 0){
       printf("end of file");
       break;
@@ -60,11 +43,11 @@ void download_file(int sockfd){
   return;
 }
 
-//upload file function for Normal User
+//Download File function for Adminuser
 void upload_file(FILE *fp, int sockfd){
-
   int n;
   char data[SIZE] = {0};
+
   while(fgets(data, SIZE, fp) != NULL) {
     if (send(sockfd, data, sizeof(data), 0) == -1) {
       perror("[-]Error in sending file.");
@@ -73,25 +56,6 @@ void upload_file(FILE *fp, int sockfd){
     bzero(data, SIZE);
   }
 }
-
-//Open file function for Normal User
-void send_file(int sockfd, char *file_name){
-  FILE *fp;
-  // printf("filename=%s\n",file_name);
-   fp = fopen(file_name, "r");
-    if (fp == NULL) {
-
-      perror("[-]Error in reading file.");
-
-    }else{
-      printf("\nFile Successfully opened!\n"); 
-    }
-
-    upload_file(fp, sockfd);
-
-    printf("\nFile data sent succefully!\n"); 
-}
-
 
 int verify_username_and_password(char *username, char*password){
   FILE *fp;
@@ -121,7 +85,7 @@ int verify_username_and_password(char *username, char*password){
         }while(c != EOF && c != '\n');
         buffer[pos] = 0;
         if (username_exist == 1){
-          buffer[strlen(buffer)-1] = '\0'; 
+          buffer[strlen(buffer)] = '\0'; 
           password_2 = buffer;
           if (strcmp(password,password_2)==0){
             password_match = 1;
@@ -141,12 +105,37 @@ int verify_username_and_password(char *username, char*password){
   }
 }
 
-//Main function to run the GeneralUser C file, and also to establish the network connection with the server
+char* get_username(void){
+  char username[100];
+  int k,l;
+  char input_1='\0';
+
+  printf("Username:");
+  while (input_1 !='\n'){
+    input_1 = getchar();
+
+    if(input_1 !='\n'){
+      username[k] = input_1;
+    }
+    k++;
+  }
+
+  return username;
+}
+
+
+//Main function to establish the network connection of Adminuser with the server
 int main(){
   int clientSocket, ret;
   struct sockaddr_in serverAddr;
   char buffer[1024];
 
+  char *username;
+
+  username = get_username();
+  printf("%s\n",username );
+
+  /*
   char username[100];
   char password[100];
   int k,l;
@@ -173,7 +162,6 @@ int main(){
     }
     l++;
   }
-  printf("\n %s %s \n",username,password);
   verify = verify_username_and_password(username,password);
   if (verify == 1){
     printf("[+]Logged in Successfully\n");
@@ -182,8 +170,82 @@ int main(){
     printf("Incorrect Username/Password\n");
     return 1;
   }
-  
+  */
 
+  //Creating Socket
+  clientSocket = socket(AF_INET, SOCK_STREAM,0);
+  if(clientSocket <0){
+    printf("[-]Error in Connection.\n");
+    exit(1);
   }
+  printf("[+]Client Socket is sucessfully.\n");
 
-//End of GeneralUser c file. 
+  memset(&serverAddr, '\0', sizeof(serverAddr));
+
+
+  //Specify an address for the socket
+  serverAddr.sin_family = AF_INET;
+  serverAddr.sin_port = htons(PORT);
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+  //Connecting to server
+  ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+  if(ret<0){
+    printf("[-]Error in connecting to Server.\n");
+    exit(1);
+  }
+  printf("[+]Successfully connected to Server.\n");
+  int n;
+  char input;
+  while(1){
+
+//reset values and buffers
+    bzero(buffer, sizeof(buffer)); 
+    input='\0';
+    n =0;
+
+    printf("user@admin: \t");
+ 
+    
+    while (input !='\n'){
+      input = getchar();
+      if(input !='\n'){
+        buffer[n] = input;
+      }
+      n++;
+    }
+
+     if (strlen(buffer)==0){
+      continue;
+    }
+   
+   
+    send(clientSocket, buffer, strlen(buffer),0);
+
+    if(strncmp(buffer, "exit",4)==0){
+          close(clientSocket);
+          printf("[-] Admin User Exit !! Disconnected from Server.\n");
+          exit(1);
+    }
+    
+      while(1){
+          bzero(buffer, sizeof(buffer)); 
+          if(recv(clientSocket, buffer, 1024,0)<0){
+            printf("[-]Error on Receiving the Data from Server");
+          }
+          else if (strncmp(buffer, "exit",4) == 0) {
+            printf("Server exited");
+
+            exit(1);
+          }else{
+            printf("\nFrom Server:----- \t %s\n", buffer);
+          
+            break;
+          }
+      }
+        printf("\n-------------------------------\n"); 
+  
+  }
+  return 0;
+}
+//End of Adminuser c file. 
