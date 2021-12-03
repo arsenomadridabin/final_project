@@ -4,15 +4,15 @@
 // Class: cs7103-au21
 // LogonID: cs710309
 
-//importing all the necessary libraries for generalUser
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+
 
 #define PORT 8000
 #define SIZE 1024
@@ -141,7 +141,7 @@ int verify_username_and_password(char *username, char*password){
   }
 }
 
-//Main function to run the GeneralUser C file, and also to establish the network connection with the server
+
 int main(){
   int clientSocket, ret;
   struct sockaddr_in serverAddr;
@@ -199,7 +199,6 @@ int main(){
   serverAddr.sin_port = htons(PORT);
   serverAddr.sin_addr.s_addr = inet_addr("127.0.01");
 
-  //Connecting to server
   ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
   if(ret<0){
     printf("[-]Error in connecting to Server.\n");
@@ -276,10 +275,8 @@ int main(){
     }else{
       printf("From Server: \t %s\n", buffer);
     }
-        printf("\n-------------------------------\n"); 
+        printf("\n*************************\n"); 
       
   }
   return 0;
 }
-
-//End of GeneralUser c file. 

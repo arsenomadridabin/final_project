@@ -5,23 +5,24 @@
 // LogonID: cs710309
 
 
-//importing all the necessary libraries for AdminUser
+//importing all the necessary libraries for SuperUser
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+
 
 #define PORT 8000
 #define SIZE 1024
 
 #define user_credential "admin_credentials.txt"
 
-// Download File function for Adminuser
+// Download File function for Super User
 void download_file(int sockfd){
   int n;
   FILE *fp;
@@ -43,7 +44,7 @@ void download_file(int sockfd){
   return;
 }
 
-//Download File function for Adminuser
+//Download File function for SuperUser
 void upload_file(FILE *fp, int sockfd){
   int n;
   char data[SIZE] = {0};
@@ -141,7 +142,7 @@ char* get_password(void){
 }
 
 
-//Main function to establish the network connection of Adminuser with the server
+//Main function to establish the network connection of SuperUser with the server
 int main(){
   int clientSocket, ret;
   struct sockaddr_in serverAddr;
@@ -212,7 +213,7 @@ int main(){
 
     if(strncmp(buffer, "exit",4)==0){
           close(clientSocket);
-          printf("[-] Admin User Exit !! Disconnected from Server.\n");
+          printf("[-] Super User Exit !! Disconnected from Server.\n");
           exit(1);
     }
     
@@ -231,9 +232,8 @@ int main(){
             break;
           }
       }
-        printf("\n-------------------------------\n"); 
+        printf("\n********************************\n"); 
   
   }
   return 0;
 }
-//End of Adminuser c file. 
