@@ -105,7 +105,7 @@ int verify_username_and_password(char *username, char*password){
   }
 }
 
-char* get_username(void){
+const char* get_username(void){
   char username[100];
   int k,l;
   char input_1='\0';
