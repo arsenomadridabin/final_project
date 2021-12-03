@@ -130,10 +130,10 @@ int main(){
   struct sockaddr_in serverAddr;
   char buffer[1024];
 
-  char *username;
-
-  username = get_username();
-  printf("%s\n",username );
+  char *username = "\0";
+  char *val;
+  val = get_username();
+  printf("%s\n",val );
 
   /*
   char username[100];
